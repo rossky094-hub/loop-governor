@@ -18,7 +18,7 @@ contracts:
       - text: Cannot claim production readiness.
         scope: final_claim
         severity: boundary
-    branchOrWorktree: loop-governor-phase1.2-controller-wrapper-implementation
+    branchOrWorktree: public-alpha-controller-wrapper
     policy: strict
 activeLoops: []
 `;
@@ -40,7 +40,7 @@ describe("evaluateLocalLoopController", () => {
     });
 
     expect(output.loopId).toBe("loop:single-docs");
-    expect(output.branchOrWorktree).toBe("loop-governor-phase1.2-controller-wrapper-implementation");
+    expect(output.branchOrWorktree).toBe("public-alpha-controller-wrapper");
     expect(output.iterationId).toBe("iteration:single-docs");
     expect(output.statusSource).toBe("supplied");
     expect(output.classification.classifiedPaths).toEqual(["docs/example.md"]);

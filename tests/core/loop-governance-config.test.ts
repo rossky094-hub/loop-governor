@@ -8,8 +8,8 @@ import {
 
 const validContractYaml = `
 version: loop-governor-exploration.v0.1
-loopId: loop:phase-1-task-3
-parentGoal: Explore branch-only Loop Governor rails.
+loopId: loop:public-alpha-config
+parentGoal: Exercise public alpha controller-only config parsing.
 objective: Parse the loop governance YAML config.
 allowedLanes:
   - core
@@ -35,7 +35,7 @@ activeLoops:
     expect(config.contracts).toHaveLength(1);
     expect(config.contracts[0]).toMatchObject({
       version: "loop-governor-exploration.v0.1",
-      loopId: "loop:phase-1-task-3",
+      loopId: "loop:public-alpha-config",
       allowedLanes: ["core"],
       policy: "strict"
     });
@@ -77,12 +77,12 @@ activeLoops:
     expect(() => parseLoopGovernanceConfig(yamlText)).toThrow();
   });
 
-  it("rejects stale v3.14-loop-governor contract labels", () => {
+  it("rejects stale legacy contract labels", () => {
     expect(() => parseLoopGovernanceConfig(`
 contracts:
   - ${validContractYaml.trim().replace(
     "version: loop-governor-exploration.v0.1",
-    "version: v3.14-loop-governor"
+    "version: legacy-loop-governor.v0"
   ).replace(/\n/g, "\n    ")}
 `)).toThrow();
   });
@@ -190,12 +190,12 @@ contracts:
     const result = validateLoopGovernanceConfigText(
       validValidationYaml.replace(
         "loop-governor-exploration.v0.1",
-        "v3.14-loop-governor"
+        "legacy-loop-governor.v0"
       )
     );
 
     expect(result.ok).toBe(false);
-    expect(result.errors.join("\n")).toMatch(/version|v3\.14/i);
+    expect(result.errors.join("\n")).toMatch(/version|legacy-loop-governor/i);
   });
 
   it("returns ok false for empty allowed paths", () => {

@@ -22,12 +22,12 @@ import {
 function createContract(overrides: Partial<LoopGovernanceContract> = {}) {
   return {
     version: "loop-governor-exploration.v0.1",
-    loopId: "loop:phase-1-task-1",
-    parentGoal: "Explore branch-only Loop Governor rails.",
+    loopId: "loop:public-alpha-controller",
+    parentGoal: "Exercise public alpha controller-only rules.",
     objective: "Define core contract schemas.",
     allowedLanes: ["core"],
     allowedPaths: ["src/core/loop-governance.ts", "tests/core/loop-governance.test.ts"],
-    branchOrWorktree: "loop-governor-exploration",
+    branchOrWorktree: "public-alpha-controller-wrapper",
     ...overrides
   };
 }
@@ -45,8 +45,8 @@ function createHygiene(overrides: Partial<LoopGovernanceHygieneInput> = {}): Loo
 
 function createCheckpoint(overrides: Partial<LoopCheckpoint> = {}): LoopCheckpoint {
   return {
-    loopId: "loop:phase-1-task-1",
-    iterationId: "iteration:task-2",
+    loopId: "loop:public-alpha-controller",
+    iterationId: "iteration:controller-test",
     changedPaths: ["src/core/loop-governance.ts"],
     laneClassification: {
       "src/core/loop-governance.ts": "core"
@@ -84,13 +84,13 @@ function createEvidenceRef(
 }
 
 describe("LoopGovernanceContractSchema", () => {
-  it("accepts branch-only v0.1 contracts and applies defaults", () => {
+  it("accepts public alpha v0.1 contracts and applies defaults", () => {
     const parsed = LoopGovernanceContractSchema.parse(createContract());
 
     expect(parsed).toEqual({
       version: "loop-governor-exploration.v0.1",
-      loopId: "loop:phase-1-task-1",
-      parentGoal: "Explore branch-only Loop Governor rails.",
+      loopId: "loop:public-alpha-controller",
+      parentGoal: "Exercise public alpha controller-only rules.",
       objective: "Define core contract schemas.",
       allowedLanes: ["core"],
       allowedPaths: ["src/core/loop-governance.ts", "tests/core/loop-governance.test.ts"],
@@ -98,15 +98,15 @@ describe("LoopGovernanceContractSchema", () => {
       requiredEvidence: [],
       stopRules: [],
       cannotClaim: [],
-      branchOrWorktree: "loop-governor-exploration",
+      branchOrWorktree: "public-alpha-controller-wrapper",
       policy: "strict"
     });
   });
 
-  it("rejects stale v3.14 contract labels", () => {
+  it("rejects stale legacy contract labels", () => {
     const result = LoopGovernanceContractSchema.safeParse({
       ...createContract(),
-      version: "v3.14-loop-governor"
+      version: "legacy-loop-governor.v0"
     });
 
     expect(result.success).toBe(false);
@@ -154,13 +154,13 @@ describe("LoopGovernanceContractSchema", () => {
         {
           kind: "missing_required_evidence",
           threshold: 1,
-          reason: "The focused test must pass before claiming Task 1 completion."
+          reason: "The focused test must pass before claiming controller completion."
         }
       ],
       cannotClaim: [
         {
-          text: "Cannot claim mainline readiness from this branch-only schema.",
-          scope: "mainline_merge",
+          text: "Cannot claim publish readiness from this controller-only schema.",
+          scope: "publish",
           severity: "boundary"
         }
       ],
@@ -189,7 +189,7 @@ describe("LoopCheckpointSchema", () => {
     };
 
     const parsed: LoopCheckpoint = LoopCheckpointSchema.parse({
-      loopId: "loop:phase-1-task-1",
+      loopId: "loop:public-alpha-controller",
       iterationId: "iteration:red-green",
       changedPaths: ["src/core/loop-governance.ts"],
       laneClassification: {
@@ -197,7 +197,7 @@ describe("LoopCheckpointSchema", () => {
         "tests/core/loop-governance.test.ts": "tests"
       },
       evidenceRefs: [evidenceRef],
-      artifactContinuityRefs: ["docs/research/2026-06-25-loop-governor-branch-direction.md"],
+      artifactContinuityRefs: ["docs/reports/controller-boundary.md"],
       hygiene: {
         trackedStatus: "clean",
         untrackedStatus: "clean",
@@ -213,7 +213,7 @@ describe("LoopCheckpointSchema", () => {
           severity: "blocking"
         }
       ],
-      nextAction: "Run focused tests and commit only Task 1 files."
+      nextAction: "Run focused tests and commit only controller test files."
     });
 
     expect(parsed.hygiene).toEqual({
@@ -235,7 +235,7 @@ describe("LoopCheckpointSchema", () => {
 
   it("applies checkpoint collection defaults", () => {
     const parsed = LoopCheckpointSchema.parse({
-      loopId: "loop:phase-1-task-1",
+      loopId: "loop:public-alpha-controller",
       iterationId: "iteration:empty-defaults",
       hygiene: {
         trackedStatus: "unknown",
@@ -257,7 +257,7 @@ describe("LoopCheckpointSchema", () => {
 
   it("rejects unknown checkpoint and hygiene keys", () => {
     expect(LoopCheckpointSchema.safeParse({
-      loopId: "loop:phase-1-task-1",
+      loopId: "loop:public-alpha-controller",
       iterationId: "iteration:unknown-top-level",
       hygiene: {
         trackedStatus: "clean",
@@ -271,7 +271,7 @@ describe("LoopCheckpointSchema", () => {
     }).success).toBe(false);
 
     expect(LoopCheckpointSchema.safeParse({
-      loopId: "loop:phase-1-task-1",
+      loopId: "loop:public-alpha-controller",
       iterationId: "iteration:unknown-hygiene-key",
       hygiene: {
         trackedStatus: "clean",
@@ -287,7 +287,7 @@ describe("LoopCheckpointSchema", () => {
 
   it("rejects empty checkpoint paths, artifact refs, and lane classifications", () => {
     const baseCheckpoint = {
-      loopId: "loop:phase-1-task-1",
+      loopId: "loop:public-alpha-controller",
       iterationId: "iteration:empty-collections",
       hygiene: {
         trackedStatus: "clean",
@@ -350,7 +350,7 @@ describe("LoopGovernanceDecisionSchema", () => {
   it("applies decision collection defaults", () => {
     const parsed = LoopGovernanceDecisionSchema.parse({
       decision: "continue",
-      reason: "Focused test passed and the diff stayed inside Task 1."
+      reason: "Focused test passed and the diff stayed inside the controller write set."
     });
 
     expect(parsed.evidenceRefs).toEqual([]);
@@ -360,12 +360,12 @@ describe("LoopGovernanceDecisionSchema", () => {
   it("rejects unknown decision keys and empty evidence refs", () => {
     expect(LoopGovernanceDecisionSchema.safeParse({
       decision: "continue",
-      reason: "Focused test passed and the diff stayed inside Task 1.",
+      reason: "Focused test passed and the diff stayed inside the controller write set.",
       persistentRegistry: "runtime/loops.json"
     }).success).toBe(false);
     expect(LoopGovernanceDecisionSchema.safeParse({
       decision: "continue",
-      reason: "Focused test passed and the diff stayed inside Task 1.",
+      reason: "Focused test passed and the diff stayed inside the controller write set.",
       evidenceRefs: [""]
     }).success).toBe(false);
   });
@@ -414,8 +414,8 @@ describe("loop governance pure evaluators", () => {
   it("intake stops dirty unclassified hygiene and preserves contract cannot-claim", () => {
     const cannotClaim = [
       {
-        text: "Cannot claim mainline readiness from the branch-only loop.",
-        scope: "mainline_merge",
+        text: "Cannot claim publish readiness from the controller-only loop.",
+        scope: "publish",
         severity: "boundary"
       }
     ] satisfies LoopGovernanceContract["cannotClaim"];
@@ -837,8 +837,8 @@ describe("loop governance pure evaluators", () => {
   it("iteration cannot-claim returns stop for user while preserving cannot-claim data", () => {
     const contractCannotClaim = [
       {
-        text: "Cannot claim mainline readiness from this branch-only evaluator.",
-        scope: "mainline_merge",
+        text: "Cannot claim publish readiness from this controller-only evaluator.",
+        scope: "publish",
         severity: "boundary"
       }
     ] satisfies LoopGovernanceContract["cannotClaim"];
@@ -1118,7 +1118,7 @@ describe("loop governance pure evaluators", () => {
 
     expect(conflicts).toEqual([
       {
-        loopId: "loop:phase-1-task-1",
+        loopId: "loop:public-alpha-controller",
         path: "src/core/",
         conflictingLoopId: "loop:other-core",
         conflictingPath: "src/core/foo.ts"

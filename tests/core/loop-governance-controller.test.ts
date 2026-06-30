@@ -39,7 +39,7 @@ function createDocsOnlyContract(): LoopGovernanceContract {
         severity: "boundary"
       }
     ],
-    branchOrWorktree: "loop-governor-dogfood-run2-classifier",
+    branchOrWorktree: "public-alpha-classifier-example",
     policy: "strict"
   };
 }

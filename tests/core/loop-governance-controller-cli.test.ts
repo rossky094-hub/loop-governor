@@ -26,16 +26,24 @@ describe("parseLoopControllerCliArgs", () => {
   });
 
   it("parses JSON options and summary mode", () => {
+    const reportEvidence = {
+      id: "evidence:manual-review",
+      kind: "report",
+      ref: "Operator reviewed the public docs-only example.",
+      freshness: "current_iteration",
+      satisfied: true
+    };
+
     expect(parseLoopControllerCliArgs([
       "--lane-rules-json", JSON.stringify([{ pathPrefix: "docs/", lane: "docs" }]),
-      "--evidence-json", JSON.stringify([{ id: "test:evidence", status: "satisfied" }]),
+      "--evidence-json", JSON.stringify([reportEvidence]),
       "--classified-ignored-json", JSON.stringify(["node_modules/"]),
       "--next-action", "Review the wrapper output.",
       "--summary-only"
     ])).toMatchObject({
       input: {
         laneRules: [{ pathPrefix: "docs/", lane: "docs" }],
-        evidenceRefs: [{ id: "test:evidence", status: "satisfied" }],
+        evidenceRefs: [reportEvidence],
         classifiedIgnoredResiduePaths: ["node_modules/"],
         nextAction: "Review the wrapper output."
       },
@@ -162,6 +170,21 @@ describe("main", () => {
     expect(readConfigText).toHaveBeenCalledWith("/measured/project-os-loop.yaml");
     expect(evaluate).not.toHaveBeenCalled();
     expect(log).toHaveBeenCalledWith(JSON.stringify({ ok: true, errors: [] }, null, 2));
+  });
+
+  it("validates the committed public docs-only template through the real CLI path", async () => {
+    const log = vi.spyOn(console, "log").mockImplementation(() => undefined);
+    const error = vi.spyOn(console, "error").mockImplementation(() => undefined);
+
+    const exitCode = await main([
+      "--validate-config-only",
+      "--root", process.cwd(),
+      "--config", "examples/docs-only/project-os-loop.yaml"
+    ]);
+
+    expect(exitCode).toBe(0);
+    expect(log).toHaveBeenCalledWith(JSON.stringify({ ok: true, errors: [] }, null, 2));
+    expect(error).not.toHaveBeenCalled();
   });
 
   it("returns non-zero JSON for invalid config-only validation", async () => {
