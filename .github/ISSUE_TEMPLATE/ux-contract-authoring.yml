@@ -35,6 +35,20 @@ body:
     validations:
       required: true
   - type: textarea
+    id: loop_contract
+    attributes:
+      label: Loop contract
+      render: yaml
+    validations:
+      required: true
+  - type: textarea
+    id: config_validation_output
+    attributes:
+      label: Config validation output or YAML error
+      render: json
+    validations:
+      required: false
+  - type: textarea
     id: raw_git_status_before_gate
     attributes:
       label: Raw git status before gate
@@ -67,5 +81,11 @@ body:
     id: actual_decision
     attributes:
       label: Actual decision
+    validations:
+      required: true
+  - type: textarea
+    id: operator_confusion
+    attributes:
+      label: What was confusing?
     validations:
       required: true

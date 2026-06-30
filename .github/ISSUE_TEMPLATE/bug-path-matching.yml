@@ -35,6 +35,20 @@ body:
     validations:
       required: true
   - type: textarea
+    id: loop_contract
+    attributes:
+      label: Loop contract
+      render: yaml
+    validations:
+      required: true
+  - type: textarea
+    id: config_validation_output
+    attributes:
+      label: Config validation output
+      render: json
+    validations:
+      required: false
+  - type: textarea
     id: raw_git_status_before_gate
     attributes:
       label: Raw git status before gate
