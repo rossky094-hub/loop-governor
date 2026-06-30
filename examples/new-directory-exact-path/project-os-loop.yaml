@@ -1,0 +1,26 @@
+contracts:
+  - version: loop-governor-exploration.v0.1
+    loopId: loop:new-directory-exact-path-example
+    parentGoal: "Demonstrate exact-path handling for a new file in a new directory."
+    objective: "Explain how git may report a parent directory before intent-to-add exposes the exact file path."
+    allowedLanes:
+      - docs
+    allowedPaths:
+      - docs/new-guides/example.md
+    expectedOutputs:
+      - "docs/new-guides/example.md exists as the only target change."
+    requiredEvidence:
+      - id: evidence:operator-reviewed-path
+        kind: report
+        ref: "Operator verified the exact new file path."
+        freshness: current_iteration
+    stopRules:
+      - kind: path_out_of_scope
+        reason: "Stop if git status only exposes a parent directory and the exact path cannot be verified."
+    cannotClaim:
+      - text: "This example does not prove all git status shapes or all operating systems."
+        scope: final_claim
+        severity: blocking
+    branchOrWorktree: measured-new-directory-example
+    policy: strict
+activeLoops: []

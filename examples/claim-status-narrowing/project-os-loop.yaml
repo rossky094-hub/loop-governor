@@ -1,0 +1,26 @@
+contracts:
+  - version: loop-governor-exploration.v0.1
+    loopId: loop:docs-only-example
+    parentGoal: "Demonstrate one allowed docs-only post-iteration gate."
+    objective: "Allow a small docs-only edit and return a usable gate decision."
+    allowedLanes:
+      - docs
+    allowedPaths:
+      - docs/
+    expectedOutputs:
+      - "One docs file changed."
+    requiredEvidence:
+      - id: evidence:manual-review
+        kind: report
+        ref: "Operator reviewed the docs-only change."
+        freshness: current_iteration
+    stopRules:
+      - kind: path_out_of_scope
+        reason: "Stop when changed paths are outside allowedPaths."
+    cannotClaim:
+      - text: "This example does not prove production readiness."
+        scope: final_claim
+        severity: blocking
+    branchOrWorktree: measured-docs-only-example
+    policy: strict
+activeLoops: []
