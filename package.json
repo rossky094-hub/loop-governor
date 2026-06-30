@@ -2,11 +2,11 @@
   "name": "loop-governor",
   "version": "0.1.0-alpha.0",
   "private": true,
-  "description": "Controller-only post-iteration gate for AI coding workflows: govern git status, loop contracts, residue, and claim boundaries without running an agent.",
+  "description": "Local post-iteration gate for AI coding agents: govern dirty worktrees, git status, residue, allowed paths, evidence, and claim boundaries without running an agent.",
   "license": "Apache-2.0",
   "type": "module",
   "engines": { "node": ">=20.19.0" },
-  "keywords": ["ai-coding","coding-agent","ai-agents","agentic-ai","developer-tools","cli","typescript","git","git-status","git-worktree","worktree","guardrails","llm-guardrails","agent-guardrails","git-guardrails","repo-governance","ai-governance","codex","claude-code","agentic-workflows"],
+  "keywords": ["ai-coding","coding-agent","ai-agents","agentic-ai","claude-code","openai-codex","codex","cline","aider","openhands","swe-agent","developer-tools","cli","typescript","git","git-status","git-worktree","worktree","dirty-worktree","repo-hygiene","guardrails","llm-guardrails","agent-guardrails","git-guardrails","repo-governance","ai-governance","human-in-the-loop","agentic-workflows"],
   "scripts": {
     "cli": "tsx src/loop-governance-controller-cli.ts",
     "test": "vitest run",

@@ -1,17 +1,35 @@
-# Loop Governor: a local gate for AI coding loops
+# Loop Governor
 
-Loop Governor is a controller-only post-iteration gate for AI coding workflows.
+**Stop AI coding agents from quietly wrecking your repo.**
 
-It does not run agents.
+AI coding agents are fast.
+They also leave dirty worktrees, out-of-scope files, generated residue, vague "done" claims, and tiny cleanup tasks that slowly bloat a project.
+
+Loop Governor is a local post-iteration gate for Codex, Claude Code, Cline, Aider, OpenHands, Goose, SWE-agent, and other AI coding workflows.
+
+It does not run the agent.
 It does not write code.
 It does not clean, repair, commit, or merge.
 
-It reads a narrow loop contract and real git status, then returns a governance decision:
-`continue`, `stop_for_user`, `update_rail`, `isolate_work`, or `commit`.
+It reads:
+
+- a narrow `project-os-loop.yaml` contract
+- real `git status`
+- allowed paths and lanes
+- required evidence
+- claim boundaries
+
+Then it returns a governance decision:
+
+- `continue`
+- `stop_for_user`
+- `update_rail`
+- `isolate_work`
+- `commit`
+
+Use it when you want AI agents to move fast without turning your repository into a pile of mystery diffs.
 
 Public alpha goal: collect failure reports from real AI coding workflows before claiming production readiness.
-
-Loop Governor can be used around Codex, Claude Code, Cline, Aider, Goose, OpenHands, Plandex, opencode, SWE-agent, and other AI coding workflows. It does not replace them.
 
 ## Minimal Workflow
 
